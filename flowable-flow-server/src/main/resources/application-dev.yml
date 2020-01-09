@@ -1,0 +1,80 @@
+server:
+    port: 21601
+
+security:
+  basic:
+    enabled: true
+#log
+logging:
+  level:
+    cn:
+      nutz: info
+      sayyoo: info
+    org:
+      springframework:
+        transaction: info
+        web: info
+#spring
+spring:
+  application:
+    name: sayyoo-workflow
+  redis:
+    database: 0
+    host: 62.234.137.124
+    password: YQ950109cjd941001
+    port: 56679
+  rabbitmq:
+    host: 62.234.137.124
+    port: 5672
+    username: root
+    password: YQ950109cjd941001
+  datasource:
+    url: jdbc:mysql://62.234.137.124:56612/workflow?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: YQ950109cjd941001
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    dbcp2:
+      validation-query: SELECT 'x'
+      validation-query-timeout: 6000
+      test-on-borrow: false
+      test-on-return: false
+    tomcat:
+      min-evictable-idle-time-millis: 300000
+      max-active: 20
+      initial-size: 5
+      max-wait:  60000
+      min-idle: 5
+      validation-query: SELECT 'x'
+      validation-query-timeout: 6000
+      test-on-borrow: false
+      test-on-return: false
+
+  output:
+    ansi:
+      enabled: always
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    database: mysql
+    hibernate.ddl-auto: create
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+
+management:
+  endpoint:
+    flowable:
+      enabled: true
+flowable:
+  idm:
+    enabled: false
+  cmmn:
+    enabled: false
+  content:
+    enabled: false
+  dmn:
+    enabled: false
+  form:
+    enabled: true
+  database-schema-update: true
