@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RepositoryService;
+import org.flowable.engine.RuntimeService;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -35,6 +36,9 @@ public class WorkFlowService {
 
     @Autowired
     private MyFormService myFormService;
+
+    @Autowired
+    private RuntimeService runtimeService;
 
     @Autowired
     private ProcessDefinitionTaskShowConfigService definitionTaskShowConfigService;
@@ -168,4 +172,10 @@ public class WorkFlowService {
         return responseBody;
     }
 
+    public Map<String, Object> getProcessVariables(String processInstanceId) {
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .includeProcessVariables().singleResult();
+        return processInstance.getProcessVariables();
+    }
 }

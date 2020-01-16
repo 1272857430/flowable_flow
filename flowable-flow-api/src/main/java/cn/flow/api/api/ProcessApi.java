@@ -51,15 +51,19 @@ public interface ProcessApi {
     @RequestMapping(value = "/getActivityFormData",method = RequestMethod.POST)
     FormModelResponseBody getActivityFormData(@RequestBody GetActivityFormDataRequestBody requestBody);
 
+    @ApiOperation(value = "查询流程类型")
     @RequestMapping(value = "/getProcessType",method = RequestMethod.GET)
     List<TypeNode> getProcessType();
 
+    @ApiOperation(value = "根据用户查询流程类型")
     @RequestMapping(value = "/getProcessTypeByUserId/{userId}",method = RequestMethod.GET)
     List<TypeNode> getProcessTypeByUserId(@PathVariable("userId") String userId);
 
+    @ApiOperation(value = "添加流程类型")
     @RequestMapping(value = "/addProcessType",method = RequestMethod.POST)
     TypeNode addProcessType(@RequestBody TypeNode typeNode);
 
+    @ApiOperation(value = "添加流程类型组")
     @RequestMapping(value = "/addProcessTypeGroup",method = RequestMethod.POST)
     TypeNode addProcessTypeGroup(@RequestBody TypeNode typeNode);
 }

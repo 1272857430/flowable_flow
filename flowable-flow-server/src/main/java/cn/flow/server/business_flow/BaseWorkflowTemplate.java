@@ -27,7 +27,7 @@ public abstract class BaseWorkflowTemplate extends AbstractTemplate {
 
     @Override
     protected void createTestCase(String processKey, String processName, Class<?> aClass, AbstractStartComponent startEventComponent, String modelPath, String classPath) {
-
+        throw new RuntimeException("have not import test module");
     }
 
     @Override
@@ -84,7 +84,7 @@ public abstract class BaseWorkflowTemplate extends AbstractTemplate {
         });
     }
 
-    public static EndEventComponent createEndEventComponent(){
+    protected static EndEventComponent createEndEventComponent(){
         return new EndEventComponent.Builder().build();
     }
 }

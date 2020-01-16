@@ -17,6 +17,7 @@ import org.flowable.form.engine.FlowableFormValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -124,20 +125,42 @@ public class ProcessController implements ProcessApi {
     @ApiOperation(value = "单个流程详细信息")
     @RequestMapping(value = "/getSingleProcessInstanceInfo/{processInstanceId}", method = RequestMethod.GET)
     public ProcessInstanceResponseBody getSingleProcessInstanceInfo(@PathVariable("processInstanceId") String processInstanceId) {
-        return null;
+        if (StringUtils.isEmpty(processInstanceId)) {
+            return null;
+        }
+        ProcessInstanceResponseBody singleProcessInstanceInfo = processExtService.getSingleProcessInstanceInfo(processInstanceId);
+        return singleProcessInstanceInfo;
     }
 
     @Override
     @ApiOperation(value = "单个流程参数")
     @RequestMapping(value = "/getProcessVariables/{processInstanceId}", method = RequestMethod.GET)
     public Map<String, Object> getProcessVariables(@PathVariable("processInstanceId") String processInstanceId) {
-        return null;
+        if (StringUtils.isEmpty(processInstanceId)) {
+            return null;
+        }
+        return workFlowTaskService.getProcessVariables(processInstanceId);
     }
 
     @Override
     @ApiOperation(value = "我发起的流程")
     @RequestMapping(value = "/getMyStartedProcessInstance/",method = RequestMethod.POST)
     public List<ProcessInstanceResponseBody> getMyStartedProcessInstance(@RequestBody GetProcessInstanceRequestBody requestBody) {
+        if (StringUtils.isEmpty(requestBody.getUserId())) {
+            throw new RuntimeException("start userId is invalid");
+        }
+        try {
+            // 查询用户片区权限
+            List<String> processScopeIds = workFlowTaskService.getProcessScopeIds(requestBody.getUserId());
+            // 动态条件查询
+            List<ProcessInstanceResponseBody> myStartedProcessInstance = processExtService.getMyStartedProcessInstance(requestBody);
+            if (!Objects.isNull(myStartedProcessInstance)) {
+                return myStartedProcessInstance;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("start userId is invalid");
+        }
         return null;
     }
 
@@ -162,23 +185,28 @@ public class ProcessController implements ProcessApi {
     }
 
     @Override
+    @ApiOperation(value = "查询流程类型")
+    @RequestMapping(value = "/getProcessType",method = RequestMethod.GET)
     public List<TypeNode> getProcessType() {
         return null;
     }
 
     @Override
+    @ApiOperation(value = "根据用户查询流程类型")
     @RequestMapping(value = "/getProcessTypeByUserId/{userId}",method = RequestMethod.GET)
     public List<TypeNode> getProcessTypeByUserId(@PathVariable("userId") String userId) {
         return null;
     }
 
     @Override
+    @ApiOperation(value = "添加流程类型")
     @RequestMapping(value = "/addProcessType",method = RequestMethod.POST)
     public TypeNode addProcessType(@RequestBody TypeNode typeNode) {
         return null;
     }
 
     @Override
+    @ApiOperation(value = "添加流程类型组")
     @RequestMapping(value = "/addProcessTypeGroup",method = RequestMethod.POST)
     public TypeNode addProcessTypeGroup(@RequestBody TypeNode typeNode) {
         return null;
