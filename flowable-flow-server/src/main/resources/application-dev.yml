@@ -56,7 +56,7 @@ spring:
     show-sql: true
     generate-ddl: true
     database: mysql
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: update
     hibernate:
       naming:
         strategy: cn.flow.server.mysql.MySQLNamingStrategy

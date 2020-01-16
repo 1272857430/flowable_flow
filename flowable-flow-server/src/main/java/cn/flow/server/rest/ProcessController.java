@@ -136,7 +136,7 @@ public class ProcessController implements ProcessApi {
 
     @Override
     @ApiOperation(value = "我发起的流程")
-    @RequestMapping(value = "/getMyFinishedProcessInstance/",method = RequestMethod.POST)
+    @RequestMapping(value = "/getMyStartedProcessInstance/",method = RequestMethod.POST)
     public List<ProcessInstanceResponseBody> getMyStartedProcessInstance(@RequestBody GetProcessInstanceRequestBody requestBody) {
         return null;
     }
