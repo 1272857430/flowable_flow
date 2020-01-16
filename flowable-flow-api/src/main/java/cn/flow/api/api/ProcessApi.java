@@ -24,9 +24,17 @@ public interface ProcessApi {
     @RequestMapping(value = "/startProcessInstanceWithForm", method = RequestMethod.POST)
     ProcessInstanceResponseBody startProcessInstanceWithForm(@RequestBody StartProcessInstanceRequestBody requestBody);
 
-    @ApiOperation(value = "流程基本信息")
+    @ApiOperation(value = "流程展示基本信息")
     @RequestMapping(value = "/getProcessedFormData/{processInstanceId}",method = RequestMethod.GET)
-    ProcessInstanceResponseBody getProcessedFormData(@PathVariable(value = "processInstanceId") String processInstanceId);
+    List<FormModelResponseBody> getProcessedFormData(@PathVariable(value = "processInstanceId") String processInstanceId);
+
+    @ApiOperation(value = "单个流程详细信息")
+    @RequestMapping(value = "/getSingleProcessInstanceInfo/{processInstanceId}", method = RequestMethod.GET)
+    ProcessInstanceResponseBody getSingleProcessInstanceInfo(@PathVariable("processInstanceId") String processInstanceId);
+
+    @ApiOperation(value = "单个流程参数")
+    @RequestMapping(value = "/getProcessVariables/{processInstanceId}", method = RequestMethod.GET)
+    Map<String, Object> getProcessVariables(@PathVariable("processInstanceId") String processInstanceId);
 
     @ApiOperation(value = "我发起的流程")
     @RequestMapping(value = "/getMyStartedProcessInstance",method = RequestMethod.POST)
@@ -39,14 +47,6 @@ public interface ProcessApi {
     @ApiOperation(value = "历史流程查询")
     @RequestMapping(value = "/getHistoryActivityInfo",method = RequestMethod.POST)
     List<HistoryActivityInfoResponseBody> getHistoryActivityInfo(@RequestBody GetHistoryActivityInfoRequestBody requestBody);
-
-    @ApiOperation(value = "单个流程详细信息")
-    @RequestMapping(value = "/getSingleProcessInstanceInfo/{processInstanceId}", method = RequestMethod.GET)
-    ProcessInstanceResponseBody getSingleProcessInstanceInfo(@PathVariable("processInstanceId") String processInstanceId);
-
-    @ApiOperation(value = "单个流程参数")
-    @RequestMapping(value = "/getProcessVariables/{processInstanceId}", method = RequestMethod.GET)
-    Map<String, Object> getProcessVariables(@PathVariable("processInstanceId") String processInstanceId);
 
     @RequestMapping(value = "/getActivityFormData",method = RequestMethod.POST)
     FormModelResponseBody getActivityFormData(@RequestBody GetActivityFormDataRequestBody requestBody);

@@ -59,6 +59,7 @@ spring:
     hibernate.ddl-auto: create
     hibernate:
       naming:
+        strategy: cn.flow.server.mysql.MySQLNamingStrategy
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
 

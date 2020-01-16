@@ -26,6 +26,9 @@ public class ProcessDefinitionTaskShowConfigEntity {
     @Column(name = "display")
     private Boolean display;
 
+    public ProcessDefinitionTaskShowConfigEntity() {
+    }
+
     public String getId() {
         return id;
     }

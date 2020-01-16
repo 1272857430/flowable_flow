@@ -4,6 +4,7 @@ import cn.flow.component.constant.DeployFilePath;
 import cn.flow.component.form.TranslateFieldAnnotation;
 import cn.flow.component.utils.JsonFormater;
 import com.alibaba.fastjson.JSON;
+import org.flowable.form.api.FormDeployment;
 import org.flowable.form.api.FormRepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,18 +24,18 @@ public class FromDeployService {
     @Autowired
     private FormRepositoryService formRepositoryService;
 
-    public void deployFrom(Class formClass) {
+    public FormDeployment deployFrom(Class formClass) {
         if (formClass == null)
-            return;
+            return null;
 
         logger.info("============开始部署表单============");
 
         Map<String, Object> formData = TranslateFieldAnnotation.translateFormData(formClass);
 
-        deployFrom(formData);
+       return deployFrom(formData);
     }
 
-    private void deployFrom(Map<String, Object> formData) {
+    private FormDeployment deployFrom(Map<String, Object> formData) {
 
         String fromKey = String.valueOf(formData.get("key"));
 
@@ -42,7 +43,7 @@ public class FromDeployService {
 
         createDeployFile(formData);
 
-        formRepositoryService.createDeployment()
+       return formRepositoryService.createDeployment()
                 .name(resourceName)
                 .addFormBytes(resourceName, JSON.toJSONBytes(formData))
                 .deploy();

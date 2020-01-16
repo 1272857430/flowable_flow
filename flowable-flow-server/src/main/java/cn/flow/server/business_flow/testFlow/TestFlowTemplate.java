@@ -16,7 +16,9 @@ import org.flowable.task.service.delegate.DelegateTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class TestFlowTemplate extends BaseWorkflowTemplate {
 
     private static Logger logger = LoggerFactory.getLogger(TestFlowTemplate.class);

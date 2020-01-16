@@ -4,77 +4,22 @@ import lombok.Data;
 
 import java.util.List;
 
+@Data
 public class FormModelResponseBody {
-    protected String id;
-    protected String name;
-    protected String key;
-    protected int version;
-    protected String description;
-    protected List<OptionFormField> fields;
-    protected List<FormOutcome> outcomes;
-    protected String outcomeVariableName;
 
-    public String getId() {
-        return id;
-    }
+    private String id;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String name;
 
-    public String getName() {
-        return name;
-    }
+    private String key;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private int version;
 
-    public String getKey() {
-        return key;
-    }
+    private String description;
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+    private List<OptionFormField> fields;
 
-    public int getVersion() {
-        return version;
-    }
+    private List<FormOutcome> outcomes;
 
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<OptionFormField> getFields() {
-        return fields;
-    }
-
-    public void setFields(List<OptionFormField> fields) {
-        this.fields = fields;
-    }
-
-    public List<FormOutcome> getOutcomes() {
-        return outcomes;
-    }
-
-    public void setOutcomes(List<FormOutcome> outcomes) {
-        this.outcomes = outcomes;
-    }
-
-    public String getOutcomeVariableName() {
-        return outcomeVariableName;
-    }
-
-    public void setOutcomeVariableName(String outcomeVariableName) {
-        this.outcomeVariableName = outcomeVariableName;
-    }
+    private String outcomeVariableName;
 }

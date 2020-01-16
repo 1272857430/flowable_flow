@@ -1,13 +1,13 @@
 package cn.flow.api.request.template;
 
+import lombok.Data;
+
+@Data
 public class DeployRequestBody {
-    private String templateName;
 
-    public String getTemplateName() {
-        return templateName;
-    }
+    private String templateClassName;
 
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
+    private String processKey;
+
+    private String formClassName;
 }

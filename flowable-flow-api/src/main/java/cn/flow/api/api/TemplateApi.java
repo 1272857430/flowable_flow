@@ -4,6 +4,7 @@ import cn.flow.api.request.template.DeployRequestBody;
 import cn.flow.api.response.template.DeployResponseBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.flowable.form.api.FormDeployment;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,5 +19,9 @@ public interface TemplateApi {
 
     @ApiOperation(value = "生成测试用例")
     @RequestMapping(value = "/createTestCase",method = RequestMethod.POST)
-    DeployResponseBody createTestCase(@RequestParam("processKey") String processKey);
+    DeployResponseBody createTestCase(@RequestBody DeployRequestBody requestBody);
+
+    @ApiOperation(value = "部署某一个表单")
+    @RequestMapping(value = "/deployFormModel",method = RequestMethod.POST)
+    FormDeployment deployFormModel(@RequestBody DeployRequestBody requestBody);
 }

@@ -4,7 +4,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
-@Table(name = "PROCESS_INSTANCE_TASK_SHOW_CONFIG", indexes = {@Index(name = "PITSC_INS_ID", columnList = "PROCESS_INSTANCE_ID", unique = true)})
+@Entity
+@Table(name = "PROCESS_INSTANCE_TASK_SHOW_CONFIG")
 public class ProcessInstanceTaskShowConfigEntity {
 
     @Id

@@ -4,11 +4,13 @@ import cn.flow.component.component.AbstractStartComponent;
 import cn.flow.component.component.AbstractUserComponent;
 import cn.flow.component.component.EndEventComponent;
 import cn.flow.component.component.IComponent;
+import cn.flow.component.form.deploy.FromDeployService;
 import cn.flow.component.taskShow.service.ProcessDefinitionTaskShowConfigService;
 import cn.flow.component.template.AbstractTemplate;
 import cn.flow.component.utils.SpringContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Map;

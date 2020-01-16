@@ -12,14 +12,14 @@ public class TemplateTestCase extends WorkFlowBaseTestCase {
      */
     @Test
     public void deployTemplate() {
-        DeployResponseBody deploy = deploy(TestFlowTemplate.PROCESS_KEY);
+        DeployResponseBody deploy = deploy(TestFlowTemplate.class.getName());
         assertSuccess(deploy);
         printJsonString(deploy);
     }
 
-    private DeployResponseBody deploy(String templateName) {
+    private DeployResponseBody deploy(String templateClassName) {
         DeployRequestBody deployRequestBody = new DeployRequestBody();
-        deployRequestBody.setTemplateName(templateName);
+        deployRequestBody.setTemplateClassName(templateClassName);
         return templateApi.deploy(deployRequestBody);
     }
 }
