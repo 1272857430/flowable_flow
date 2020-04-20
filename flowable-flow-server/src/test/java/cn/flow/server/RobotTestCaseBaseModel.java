@@ -5,6 +5,7 @@ import cn.flow.api.request.task.FindTaskRequestBody;
 import cn.flow.api.response.process.ProcessInstanceResponseBody;
 import cn.flow.api.response.task.CompleteTaskResponseBody;
 import cn.flow.api.response.task.EasyTaskInfoResponse;
+import cn.flow.api.result.Result;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -25,10 +26,10 @@ public class RobotTestCaseBaseModel extends WorkFlowBaseTestCase {
      * @return 流程实例ID
      */
     public String startComponent(String userId, String processKey, String processName, String processScopeId, Map<String, Object> variables) {
-        ProcessInstanceResponseBody processInstanceResponseBodyResult = startProcessInstanceWithForm(userId, processKey, processName, processScopeId, variables);
-        assertSuccess(processInstanceResponseBodyResult);
-        printJsonString(processInstanceResponseBodyResult);
-        return processInstanceResponseBodyResult.getProcessInstanceId();
+        Result<ProcessInstanceResponseBody> result = startProcessInstanceWithForm(userId, processKey, processName, processScopeId, variables);
+        assertSuccess(result);
+        printJsonString(result);
+        return result.getData().getProcessInstanceId();
     }
 
 

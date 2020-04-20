@@ -8,6 +8,7 @@ import cn.flow.api.request.form.GetFormModelRequestBody;
 import cn.flow.api.request.process.StartProcessInstanceRequestBody;
 import cn.flow.api.response.form.FormModelResponseBody;
 import cn.flow.api.response.process.ProcessInstanceResponseBody;
+import cn.flow.api.result.Result;
 import cn.flow.server.base.BaseTestCase;
 import cn.flow.server.base.Mode;
 import org.junit.Before;
@@ -50,7 +51,7 @@ public abstract class WorkFlowBaseTestCase extends BaseTestCase {
      * @param variables           启动表单数据
      * @return 流程实例数据
      */
-    public ProcessInstanceResponseBody startProcessInstanceWithForm(String userId, String processBusinessKey, String processInstanceName, String processScopeId, Map<String, Object> variables) {
+    public Result<ProcessInstanceResponseBody> startProcessInstanceWithForm(String userId, String processBusinessKey, String processInstanceName, String processScopeId, Map<String, Object> variables) {
 
         StartProcessInstanceRequestBody startProcessInstanceRequestBody = new StartProcessInstanceRequestBody();
         startProcessInstanceRequestBody.setProcessBusinessKey(processBusinessKey);

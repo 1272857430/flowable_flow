@@ -2,6 +2,7 @@ package cn.flow.server;
 
 import cn.flow.api.request.template.DeployRequestBody;
 import cn.flow.api.response.template.DeployResponseBody;
+import cn.flow.api.result.Result;
 import cn.flow.server.business_flow.testFlow.TestFlowTemplate;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class CreateTestCase extends WorkFlowBaseTestCase {
         DeployRequestBody deployRequestBody = new DeployRequestBody();
         deployRequestBody.setTemplateClassName(templateClassName);
         deployRequestBody.setProcessKey(processKey);
-        DeployResponseBody createTestCase = templateApi.createTestCase(deployRequestBody);
+        Result<DeployResponseBody> createTestCase = templateApi.createTestCase(deployRequestBody);
         printJsonString(createTestCase);
     }
 }

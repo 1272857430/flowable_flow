@@ -4,9 +4,11 @@ import cn.flow.api.request.process.*;
 import cn.flow.api.response.form.FormModelResponseBody;
 import cn.flow.api.response.process.ProcessInstanceResponseBody;
 import cn.flow.api.response.process.HistoryActivityInfoResponseBody;
+import cn.flow.api.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,7 @@ public interface ProcessApi {
 
     @ApiOperation(value = "启动流程")
     @RequestMapping(value = "/startProcessInstanceWithForm", method = RequestMethod.POST)
-    ProcessInstanceResponseBody startProcessInstanceWithForm(@RequestBody StartProcessInstanceRequestBody requestBody);
+    Result<ProcessInstanceResponseBody> startProcessInstanceWithForm(@RequestBody @Validated StartProcessInstanceRequestBody requestBody);
 
     @ApiOperation(value = "流程展示基本信息")
     @RequestMapping(value = "/getProcessedFormData/{processInstanceId}",method = RequestMethod.GET)

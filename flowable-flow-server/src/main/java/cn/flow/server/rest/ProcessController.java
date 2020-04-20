@@ -5,19 +5,14 @@ import cn.flow.api.request.process.*;
 import cn.flow.api.response.form.FormModelResponseBody;
 import cn.flow.api.response.process.HistoryActivityInfoResponseBody;
 import cn.flow.api.response.process.ProcessInstanceResponseBody;
+import cn.flow.api.result.Result;
+import cn.flow.api.result.ResultCode;
 import cn.flow.server.service.*;
-import cn.flow.server.service.dao.ProcessExtDao;
-import cn.flow.server.utils.IdAssertUtil;
 import io.swagger.annotations.ApiOperation;
-import org.flowable.engine.HistoryService;
-import org.flowable.engine.IdentityService;
-import org.flowable.engine.RuntimeService;
-import org.flowable.engine.TaskService;
 import org.flowable.form.engine.FlowableFormValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -31,25 +26,10 @@ public class ProcessController implements ProcessApi {
     private static final Logger logger = LoggerFactory.getLogger(ProcessController.class);
 
     @Autowired
-   private IdentityService identityService;
-
-    @Autowired
-    private TaskService taskService;
-
-    @Autowired
     private WorkFlowService workFlowTaskService;
 
     @Autowired
     private ProcessExtService processExtService;
-
-    @Autowired
-    private RuntimeService runtimeService;
-
-    @Autowired
-    private HistoryService historyService;
-
-    @Autowired
-    private ProcessExtDao processExtDao;
 
     @Autowired
     private ProcessLockService processLockService;
@@ -63,16 +43,8 @@ public class ProcessController implements ProcessApi {
     @Override
     @ApiOperation(value = "启动流程")
     @RequestMapping(value = "/startProcessInstanceWithForm", method = RequestMethod.POST)
-    public ProcessInstanceResponseBody startProcessInstanceWithForm(@RequestBody StartProcessInstanceRequestBody requestBody) {
-        if (StringUtils.isEmpty(requestBody.getProcessScopeId())) {
-            processStartFaildService.insertData(requestBody, "片区ID不能为空");
-            throw new RuntimeException("片区ID不能为空");
-        }
+    public Result<ProcessInstanceResponseBody> startProcessInstanceWithForm(@RequestBody StartProcessInstanceRequestBody requestBody) {
 
-        if (!IdAssertUtil.assertIdWidthIs32(requestBody.getInitiator())) {
-            processStartFaildService.insertData(requestBody, "发起人ID不合法");
-            throw new RuntimeException("发起人ID不合法");
-        }
         // TODO 判断流程是否发起
         if (!processStartChanceService.judgeStartProcess(requestBody.getProcessBusinessKey(), requestBody.getProcessScopeId())) {
             logger.info("不发起流程");
@@ -92,7 +64,8 @@ public class ProcessController implements ProcessApi {
             variables.put("processScopeId", requestBody.getProcessScopeId());
             variables.put("startUserId", requestBody.getInitiator());
             String processInstanceName = requestBody.getProcessInstanceName();
-            return processExtService.startProcessInstanceWithForm(requestBody.getProcessBusinessKey(), requestBody.getInitiator(), processInstanceName, requestBody.getProcessScopeId(), variables);
+            ProcessInstanceResponseBody processInstanceResponseBody = processExtService.startProcessInstanceWithForm(requestBody.getProcessBusinessKey(), requestBody.getInitiator(), processInstanceName, requestBody.getProcessScopeId(), variables);
+            return new Result<>(processInstanceResponseBody);
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("发起失败，释放锁");
@@ -102,7 +75,7 @@ public class ProcessController implements ProcessApi {
                 throw new RuntimeException("表单参数有误");
             } else {
                 processStartFaildService.insertData(requestBody, e.getMessage());
-                return null;
+                return new Result<>(ResultCode.SYS_ERROR);
             }
         }
     }

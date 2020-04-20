@@ -1,6 +1,7 @@
 package cn.flow.server;
 
 import cn.flow.api.request.template.DeployRequestBody;
+import cn.flow.api.result.Result;
 import cn.flow.server.business_flow.testFlow.form.TestUserHandForm;
 import org.flowable.form.api.FormDeployment;
 import org.junit.Test;
@@ -12,11 +13,11 @@ public class FormTestCase extends WorkFlowBaseTestCase {
      */
     @Test
     public void deployTemplate() {
-        FormDeployment formDeployment = deployForm(TestUserHandForm.class.getName());
-        printJsonString(formDeployment);
+        Result<FormDeployment> result = deployForm(TestUserHandForm.class.getName());
+        printJsonString(result);
     }
 
-    private FormDeployment deployForm(String formClassName){
+    private Result<FormDeployment> deployForm(String formClassName){
         DeployRequestBody deployRequestBody = new DeployRequestBody();
         deployRequestBody.setFormClassName(formClassName);
         return templateApi.deployFormModel(deployRequestBody);

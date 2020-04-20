@@ -1,0 +1,19 @@
+
+{
+  "outcomes":[
+  ],
+  "name":"form-test-start",
+  "fields":[
+    {
+      "name":"备注",
+      "overrideId":false,
+      "readOnly":false,
+      "id":"memo",
+      "type":"string",
+      "fieldType":"OptionFormField",
+      "required":true
+    }
+  ],
+  "version":1,
+  "key":"form-test-start"
+}

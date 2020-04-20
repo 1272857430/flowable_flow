@@ -2,6 +2,7 @@ package cn.flow.server;
 
 import cn.flow.api.request.template.DeployRequestBody;
 import cn.flow.api.response.template.DeployResponseBody;
+import cn.flow.api.result.Result;
 import cn.flow.server.business_flow.testFlow.TestFlowTemplate;
 import org.junit.Test;
 
@@ -12,12 +13,12 @@ public class TemplateTestCase extends WorkFlowBaseTestCase {
      */
     @Test
     public void deployTemplate() {
-        DeployResponseBody deploy = deploy(TestFlowTemplate.class.getName());
+        Result<DeployResponseBody> deploy = deploy(TestFlowTemplate.class.getName());
         assertSuccess(deploy);
         printJsonString(deploy);
     }
 
-    private DeployResponseBody deploy(String templateClassName) {
+    private Result<DeployResponseBody> deploy(String templateClassName) {
         DeployRequestBody deployRequestBody = new DeployRequestBody();
         deployRequestBody.setTemplateClassName(templateClassName);
         return templateApi.deploy(deployRequestBody);
