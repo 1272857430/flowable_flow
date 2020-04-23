@@ -1,8 +1,7 @@
 package cn.flow.component.form.config;
 
+import cn.flow.component.exception.FlowDeployException;
 import com.google.gson.Gson;
-import org.flowable.common.engine.api.FlowableException;
-import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.engine.form.StartFormData;
 import org.flowable.engine.form.TaskFormData;
 import org.flowable.engine.impl.form.FormEngine;
@@ -15,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class CustomFormEngine implements FormEngine{
@@ -49,14 +49,11 @@ public class CustomFormEngine implements FormEngine{
 
     private String getFormTemplateString(String formKey) {
         byte[] resourceBytes = getFormResource(formKey);
-        String encoding = "UTF-8";
-        String formTemplateString = "";
         try {
-            formTemplateString = new String(resourceBytes, encoding);
+            return new String(resourceBytes, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            throw new FlowableException("Unsupported encoding of :" + encoding, e);
+            throw new FlowDeployException("Unsupported encoding of :" + StandardCharsets.UTF_8.name(), e);
         }
-        return formTemplateString;
     }
 
     private byte[] getFormResource(String formKey) {
@@ -64,7 +61,7 @@ public class CustomFormEngine implements FormEngine{
                 .formDefinitionKey(formKey).latestVersion().singleResult();
         InputStream inputStream = formRepositoryService.getResourceAsStream(formDefinition.getDeploymentId(), formDefinition.getResourceName());
         if (Objects.isNull(inputStream)) {
-            throw new FlowableObjectNotFoundException("Form with formKey '" + formKey + "' does not exist", String.class);
+            throw new FlowDeployException("Form with formKey '" + formKey + "' does not exist");
         }
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); InputStream is = inputStream) {
             byte[] buffer = new byte[1024];
