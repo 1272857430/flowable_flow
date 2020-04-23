@@ -8,11 +8,10 @@ import cn.flow.api.response.process.ProcessInstanceResponseBody;
 import cn.flow.api.result.Result;
 import cn.flow.api.result.ResultCode;
 import cn.flow.server.service.*;
+import cn.flow.server.service_flow.WorkFlowService;
 import io.swagger.annotations.ApiOperation;
-import org.flowable.form.engine.FlowableFormValidationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,9 @@ import java.util.*;
 @RequestMapping("/workflow/process")
 public class ProcessController implements ProcessApi {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProcessController.class);
+    @Autowired
+    @Qualifier("ProcessHandleService")
+    private ProcessService processService;
 
     @Autowired
     private WorkFlowService workFlowTaskService;
@@ -31,52 +32,15 @@ public class ProcessController implements ProcessApi {
     @Autowired
     private ProcessExtService processExtService;
 
-    @Autowired
-    private ProcessLockService processLockService;
-
-    @Autowired
-    private ProcessStartChanceService processStartChanceService;
-
-    @Autowired
-    private ProcessStartFaildService processStartFaildService;
-
     @Override
     @ApiOperation(value = "启动流程")
     @RequestMapping(value = "/startProcessInstanceWithForm", method = RequestMethod.POST)
     public Result<ProcessInstanceResponseBody> startProcessInstanceWithForm(@RequestBody StartProcessInstanceRequestBody requestBody) {
-
-        // TODO 判断流程是否发起
-        if (!processStartChanceService.judgeStartProcess(requestBody.getProcessBusinessKey(), requestBody.getProcessScopeId())) {
-            logger.info("不发起流程");
-            return null;
-        }
-
-        // TODO 流程加锁，避免业务重复发起，(锁机制：流程key+片区+发起人)
         try {
-            processLockService.tryLockProcess(requestBody.getProcessBusinessKey(),requestBody.getProcessScopeId(),requestBody.getInitiator());
-        }catch (Exception e) {
-            processStartFaildService.insertData(requestBody, e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        }
-
-        try {
-            Map<String, Object> variables = requestBody.getVariables();
-            variables.put("processScopeId", requestBody.getProcessScopeId());
-            variables.put("startUserId", requestBody.getInitiator());
-            String processInstanceName = requestBody.getProcessInstanceName();
-            ProcessInstanceResponseBody processInstanceResponseBody = processExtService.startProcessInstanceWithForm(requestBody.getProcessBusinessKey(), requestBody.getInitiator(), processInstanceName, requestBody.getProcessScopeId(), variables);
+            ProcessInstanceResponseBody processInstanceResponseBody = processService.startProcessInstanceWithForm(requestBody);
             return new Result<>(processInstanceResponseBody);
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("发起失败，释放锁");
-            processLockService.releaseProcessLock(requestBody.getProcessBusinessKey(),requestBody.getProcessScopeId(),requestBody.getInitiator());
-            if (e instanceof FlowableFormValidationException) {
-                processStartFaildService.insertData(requestBody, "表单参数有误" + e.getMessage());
-                throw new RuntimeException("表单参数有误");
-            } else {
-                processStartFaildService.insertData(requestBody, e.getMessage());
-                return new Result<>(ResultCode.SYS_ERROR);
-            }
+            return new Result<>(ResultCode.SYS_ERROR);
         }
     }
 
@@ -123,8 +87,8 @@ public class ProcessController implements ProcessApi {
             throw new RuntimeException("start userId is invalid");
         }
         try {
-            // 查询用户片区权限
-            List<String> processScopeIds = workFlowTaskService.getProcessScopeIds(requestBody.getUserId());
+            // TODO 需要接入用户权限体系 查询用户片区权限
+            List<String> processScopeIds = new ArrayList<>();
             // 动态条件查询
             List<ProcessInstanceResponseBody> myStartedProcessInstance = processExtService.getMyStartedProcessInstance(requestBody);
             if (!Objects.isNull(myStartedProcessInstance)) {

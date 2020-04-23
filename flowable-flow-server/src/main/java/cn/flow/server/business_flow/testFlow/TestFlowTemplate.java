@@ -37,13 +37,13 @@ public class TestFlowTemplate extends BaseWorkflowTemplate {
     protected void buildComponents(AbstractStartComponent component) {
 
         SimpleStartEventComponent simpleStartEventComponent = (SimpleStartEventComponent) component;
-//        SimpleUserTaskComponent simpleComponent1 = TestFlowFactory.simpleUserComponent1();
+        SimpleUserTaskComponent simpleComponent1 = TestFlowFactory.simpleUserComponent1();
         EndEventComponent endEventComponent = createEndEventComponent();
 
         /* 连线 */
-        simpleStartEventComponent.setNextComponent(endEventComponent);
+        simpleStartEventComponent.setNextComponent(simpleComponent1);
 
-//        simpleComponent1.setNextComponent(endEventComponent);
-//        simpleComponent1.setTaskListenerSpringBeanName("testListener");
+        simpleComponent1.setNextComponent(endEventComponent);
+        simpleComponent1.setTaskListenerSpringBeanName("testListener");
     }
 }

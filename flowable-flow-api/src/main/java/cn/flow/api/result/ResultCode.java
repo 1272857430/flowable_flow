@@ -2,6 +2,7 @@ package cn.flow.api.result;
 
 public enum ResultCode {
     SUCCESS(200, "success"),
+    NULL_DATA(888, "null data"),
     SYS_ERROR(999, "system error");
 
     private int code;

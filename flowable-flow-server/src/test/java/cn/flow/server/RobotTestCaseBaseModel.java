@@ -6,6 +6,8 @@ import cn.flow.api.response.process.ProcessInstanceResponseBody;
 import cn.flow.api.response.task.CompleteTaskResponseBody;
 import cn.flow.api.response.task.EasyTaskInfoResponse;
 import cn.flow.api.result.Result;
+import cn.flow.component.utils.JsonFormater;
+import com.alibaba.fastjson.JSON;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -31,7 +33,6 @@ public class RobotTestCaseBaseModel extends WorkFlowBaseTestCase {
         printJsonString(result);
         return result.getData().getProcessInstanceId();
     }
-
 
     /**
      * 通知流程继续往下走

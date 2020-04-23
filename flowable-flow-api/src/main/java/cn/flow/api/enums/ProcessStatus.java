@@ -1,31 +1,37 @@
 package cn.flow.api.enums;
 
-/**
- * @author ponta
- * @date 2018/8/15
- * @email supreme@ponta.io
- */
+
+import org.springframework.util.StringUtils;
+
 public enum ProcessStatus {
-    /**
-     * 已结束
-     */
-    FINISHED(1),
-    /**
-     * 进行中
-     */
-    UNFINISHED(2);
 
-    private int code;
+    FINISHED("FINISHED", "已结束"),
+    UNFINISHED("UNFINISHED", "进行中");
 
-    ProcessStatus(int code) {
+    private String code;
+    private String name;
+
+    ProcessStatus(String code, String name) {
         this.code = code;
+        this.name = name;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public String getName() {
+        return name;
+    }
+
+    private String getNameByCode(String code){
+        if (StringUtils.isEmpty(code))
+            return null;
+        for (ProcessStatus value : ProcessStatus.values()) {
+            if (value.getCode().equals(code)){
+                return value.name;
+            }
+        }
+        return null;
     }
 }

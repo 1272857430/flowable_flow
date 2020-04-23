@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,12 +28,11 @@ public class FromDeployService {
     public FormDeployment deployFrom(Class formClass) {
         if (formClass == null)
             return null;
-
-        logger.info("============开始部署表单============");
+        logger.info("============开始部署表单:" + formClass.getSimpleName() + "============");
 
         Map<String, Object> formData = TranslateFieldAnnotation.translateFormData(formClass);
 
-       return deployFrom(formData);
+        return deployFrom(formData);
     }
 
     private FormDeployment deployFrom(Map<String, Object> formData) {
@@ -43,13 +43,13 @@ public class FromDeployService {
 
         createDeployFile(formData);
 
-       return formRepositoryService.createDeployment()
+        return formRepositoryService.createDeployment()
                 .name(resourceName)
                 .addFormBytes(resourceName, JSON.toJSONBytes(formData))
                 .deploy();
     }
 
-    private void createDeployFile(Map<String, Object> formData){
+    private void createDeployFile(Map<String, Object> formData) {
         try {
             String fileName = new String((DeployFilePath.formAbsolutePath + "/" + formData.get("key") + ".json").getBytes(), StandardCharsets.UTF_8);
             String content = JsonFormater.format(JSON.toJSONString(formData));

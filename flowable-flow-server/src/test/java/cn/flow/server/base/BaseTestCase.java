@@ -1,5 +1,6 @@
 package cn.flow.server.base;
 
+import cn.flow.component.utils.JsonFormater;
 import com.alibaba.fastjson.JSON;
 import feign.Feign;
 import feign.RequestInterceptor;
@@ -35,7 +36,7 @@ public class BaseTestCase extends Assert {
     }
 
     protected void printJsonString(Object o){
-        System.out.println(JSON.toJSONString(o));
+        System.out.println(JsonFormater.format(JSON.toJSONString(o)));
     }
 
     protected void assertAllFields(Object object1, Object object2) {

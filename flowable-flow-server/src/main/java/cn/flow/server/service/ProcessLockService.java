@@ -2,6 +2,7 @@ package cn.flow.server.service;
 
 import cn.flow.server.service.dao.ProcessLockDao;
 import cn.flow.server.service.entity.ProcessLockEntity;
+import cn.flow.server.service_third.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

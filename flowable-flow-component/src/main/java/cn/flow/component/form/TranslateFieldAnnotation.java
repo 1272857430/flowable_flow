@@ -15,6 +15,9 @@ import java.util.Map;
 
 public class TranslateFieldAnnotation {
 
+    public final static String PROCESS_SCOPE_ID = "processScopeId";
+    public final static String OUT_COME = "outcome";
+
     /**
      * 获取formKey
      */
@@ -87,8 +90,26 @@ public class TranslateFieldAnnotation {
             }
             mapList.add(map);
         }
+        // 为流程添加默认ProcessScopeId
+        mapList.add(defaultProcessScopeId(PROCESS_SCOPE_ID));
+        mapList.add(defaultProcessScopeId(OUT_COME));
 
         return mapList;
     }
 
+    // 为流程添加默认ProcessScopeId
+    private static Map<String, Object> defaultProcessScopeId(String key) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("fieldType", "FormField");
+        map.put("id", key);
+        map.put("name", key);
+        map.put("type", "string");
+        map.put("value", null);
+        map.put("required", false);
+        map.put("readOnly", false);
+        map.put("overrideId", true);
+        map.put("placeholder", null);
+        map.put("layout", null);
+        return map;
+    }
 }

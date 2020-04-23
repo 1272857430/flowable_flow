@@ -4,7 +4,6 @@ import cn.flow.api.api.FormApi;
 import cn.flow.api.api.ProcessApi;
 import cn.flow.api.api.TaskApi;
 import cn.flow.api.api.TemplateApi;
-import cn.flow.api.request.form.GetFormModelRequestBody;
 import cn.flow.api.request.process.StartProcessInstanceRequestBody;
 import cn.flow.api.response.form.FormModelResponseBody;
 import cn.flow.api.response.process.ProcessInstanceResponseBody;
@@ -35,12 +34,10 @@ public abstract class WorkFlowBaseTestCase extends BaseTestCase {
      * 根据表单key获取表单信息
      */
     public String getFormModelByKey(String formKey){
-        GetFormModelRequestBody getFormModelRequestBody = new GetFormModelRequestBody();
-        getFormModelRequestBody.setFormkey(formKey);
-        FormModelResponseBody formModelByKey = formApi.getFormModelByKey(getFormModelRequestBody);
-        assertSuccess(formModelByKey);
-        printJsonString(formModelByKey);
-        return formModelByKey.getId();
+        Result<FormModelResponseBody> result = formApi.getFormModelByKey(formKey);
+        assertSuccess(result);
+        printJsonString(result);
+        return result.getData().getId();
     }
 
     /**

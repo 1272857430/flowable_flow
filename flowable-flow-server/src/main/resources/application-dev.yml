@@ -14,6 +14,7 @@ logging:
       springframework:
         transaction: info
         web: info
+      flowable: info
 #spring
 spring:
   application:
@@ -29,7 +30,7 @@ spring:
     username: root
     password: YQ950109cjd941001
   datasource:
-    url: jdbc:mysql://62.234.137.124:56612/workflow?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://62.234.137.124:56612/workflow_new?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
     password: YQ950109cjd941001
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -56,7 +57,7 @@ spring:
     show-sql: true
     generate-ddl: true
     database: mysql
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: none
     hibernate:
       naming:
         strategy: cn.flow.server.mysql.MySQLNamingStrategy
@@ -79,7 +80,8 @@ flowable:
     enabled: false
   form:
     enabled: true
-  database-schema-update: true
+  database-schema-update: false
+#  database-schema-update: false
 
 eureka:
   client: # 客户端进行Eureka注册的配置

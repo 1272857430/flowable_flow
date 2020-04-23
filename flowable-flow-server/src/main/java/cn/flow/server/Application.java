@@ -17,11 +17,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @EnableCaching //开启缓存
 @EnableTransactionManagement // 开启事务管理
-@ComponentScan(basePackages = {"cn.flow"})
-@EntityScan(basePackages = {"cn.flow"})
-@EnableJpaRepositories(basePackages = {"cn.flow"})
+@ComponentScan(basePackages = {"cn.flow.api", "cn.flow.component", "cn.flow.server"})
+@EntityScan(basePackages = {"cn.flow.api", "cn.flow.component", "cn.flow.server"})
+@EnableJpaRepositories(basePackages = {"cn.flow.api", "cn.flow.component", "cn.flow.server"})
 @SpringBootApplication
 public class Application {
     public static final Logger logger = LoggerFactory.getLogger(Application.class);

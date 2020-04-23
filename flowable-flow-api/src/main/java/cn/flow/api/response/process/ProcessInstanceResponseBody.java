@@ -65,4 +65,7 @@ public class ProcessInstanceResponseBody {
     private String assignee;
 
     private String taskId;
+
+    public ProcessInstanceResponseBody() {
+    }
 }
