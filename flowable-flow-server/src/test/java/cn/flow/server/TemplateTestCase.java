@@ -15,7 +15,6 @@ public class TemplateTestCase extends WorkFlowBaseTestCase {
     public void deployTemplate() {
         Result<DeployResponseBody> deploy = deploy(TestFlowTemplate.class.getName());
         assertSuccess(deploy);
-        printJsonString(deploy);
     }
 
     private Result<DeployResponseBody> deploy(String templateClassName) {

@@ -7,7 +7,7 @@ public class EasyTaskInfoResponse {
 
     private String taskId;
 
-    private String taskFormKeyId;
+    private String taskFormDefinitionId;
 
     private String roleKey;
 
@@ -16,9 +16,9 @@ public class EasyTaskInfoResponse {
     public EasyTaskInfoResponse() {
     }
 
-    public EasyTaskInfoResponse(String taskId, String taskFormKeyId, String userId) {
+    public EasyTaskInfoResponse(String taskId, String taskFormDefinitionId, String userId) {
         this.taskId = taskId;
-        this.taskFormKeyId = taskFormKeyId;
+        this.taskFormDefinitionId = taskFormDefinitionId;
         this.userId = userId;
     }
 }

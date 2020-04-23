@@ -89,11 +89,12 @@ public class WorkFlowFormService {
      * 获取表单数据
      */
     public FormModelResponseBody getFormData(FormInfo formInfo) {
-        SimpleFormModel simpleFormModel = (SimpleFormModel) formInfo.getFormModel();
         FormModelResponseBody formModelResponseBody = new FormModelResponseBody();
         List<OptionFormField> formFields = new ArrayList<>();
+        SimpleFormModel simpleFormModel = (SimpleFormModel) formInfo.getFormModel();
 
         BeanUtils.copyProperties(simpleFormModel, formModelResponseBody);
+        formModelResponseBody.setId(formInfo.getId());
         for (FormField ele : simpleFormModel.getFields()) {
             OptionFormField field = new OptionFormField();
             BeanUtils.copyProperties(ele, field);

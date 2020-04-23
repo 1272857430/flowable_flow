@@ -5,16 +5,16 @@ import com.alibaba.fastjson.JSON;
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.jackson.JacksonDecoder;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.feign.support.SpringMvcContract;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
+@Slf4j
 public class BaseTestCase extends Assert {
-    protected static final Logger logger = LoggerFactory.getLogger(BaseTestCase.class);
 
     public <T> T todo(Class<T> clazz, String serverUrl){
         SpringMvcContract contract = new SpringMvcContract();
@@ -35,7 +35,7 @@ public class BaseTestCase extends Assert {
         return builder.target(clazz, serverUrl);
     }
 
-    protected void printJsonString(Object o){
+    public void printJsonString(Object o){
         System.out.println(JsonFormater.format(JSON.toJSONString(o)));
     }
 
@@ -45,7 +45,7 @@ public class BaseTestCase extends Assert {
             String errMsg = "null object found: ";
             errMsg += "\nObject1: " + object1;
             errMsg += "\nObject2: " + object2;
-            logger.error(errMsg);
+            log.error(errMsg);
             assert (false);
         }
 
@@ -72,7 +72,7 @@ public class BaseTestCase extends Assert {
                 String errMsg = "Failed to verify method result: " + methodName;
                 errMsg += "\nValue of object1: " + val1;
                 errMsg += "\nValue of object2: " + val2;
-                logger.error(errMsg);
+                log.error(errMsg);
                 assert (false);
             }
 
@@ -87,7 +87,7 @@ public class BaseTestCase extends Assert {
                 String errMsg = "Failed to verify method result: " + methodName;
                 errMsg += "\nValue of object1: " + val1;
                 errMsg += "\nValue of object2: " + val2;
-                logger.error(errMsg);
+                log.error(errMsg);
                 assert (false);
             }
         }
@@ -125,24 +125,24 @@ public class BaseTestCase extends Assert {
         }
 
         if (obj1 == null || obj2 == null) {
-            logger.error("Failed to assert equal objects: \nObject1: " + obj1 + "\nObject2: " + obj2);
+            log.error("Failed to assert equal objects: \nObject1: " + obj1 + "\nObject2: " + obj2);
             assert(false);
         }
 
         if (!obj1.equals(obj2)) {
-            logger.error("Failed to assert equal objects: \nObject1: " + obj1 + "\nObject2: " + obj2);
+            log.error("Failed to assert equal objects: \nObject1: " + obj1 + "\nObject2: " + obj2);
             assert(false);
         }
     }
 
     protected void assertNotEqual(Object obj1, Object obj2) {
         if (obj1 == null || obj2 == null) {
-            logger.error("Failed to assert non-equal objects: \nObject1: " + obj1 + "\nObject2: " + obj2);
+            log.error("Failed to assert non-equal objects: \nObject1: " + obj1 + "\nObject2: " + obj2);
             assert(false);
         }
 
         if (obj1.equals(obj2)) {
-            logger.error("Failed to assert non-equal objects: \nObject: " + obj1);
+            log.error("Failed to assert non-equal objects: \nObject: " + obj1);
             assert(false);
         }
     }
@@ -157,16 +157,16 @@ public class BaseTestCase extends Assert {
                     method = obj.getClass().getMethod("getMessage");
                     res = method.invoke(obj);
                     errMsg += "\n" + res.toString();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                catch (Exception e) {
-                }
-                logger.error(errMsg);
+                log.error(errMsg);
                 assert(false);
             }
-        }
-        catch (Exception e) {
-            logger.error("Failed to assert success code, object: " + obj.toString());
+        } catch (Exception e) {
+            log.error("Failed to assert success code, object: " + obj.toString());
             assert(false);
         }
+        printJsonString(obj);
     }
 }

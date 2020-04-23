@@ -20,7 +20,7 @@ public class CreateTestCase extends WorkFlowBaseTestCase {
         DeployRequestBody deployRequestBody = new DeployRequestBody();
         deployRequestBody.setTemplateClassName(templateClassName);
         deployRequestBody.setProcessKey(processKey);
-        Result<DeployResponseBody> createTestCase = templateApi.createTestCase(deployRequestBody);
-        printJsonString(createTestCase);
+        Result<DeployResponseBody> result = templateApi.createTestCase(deployRequestBody);
+        assertSuccess(result);
     }
 }

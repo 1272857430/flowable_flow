@@ -14,6 +14,7 @@ import org.junit.Before;
 
 import java.util.Map;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class WorkFlowBaseTestCase extends BaseTestCase {
 
     protected ProcessApi processApi;
@@ -36,7 +37,6 @@ public abstract class WorkFlowBaseTestCase extends BaseTestCase {
     public String getFormModelByKey(String formKey){
         Result<FormModelResponseBody> result = formApi.getFormModelByKey(formKey);
         assertSuccess(result);
-        printJsonString(result);
         return result.getData().getId();
     }
 

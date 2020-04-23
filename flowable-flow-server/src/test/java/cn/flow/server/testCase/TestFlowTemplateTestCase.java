@@ -29,6 +29,6 @@ public class TestFlowTemplateTestCase extends RobotTestCaseBaseModel {
     @Test
     public void allTest0() {
         String processInstanceId = startComponent(START_USER_ID, PROCESS_KEY, PROCESS_NAME, PROCESS_SCOPE_ID, start_2_1());
-//        keepOnWithForm("8f56300e-84a2-11ea-a073-d65c5e66a961", "处理", OUT_COME, simpleComponent());
+        keepOnWithForm(processInstanceId, "测试人工节点", OUT_COME, simpleComponent());
     }
 }

@@ -3,19 +3,22 @@ package cn.flow.server;
 import cn.flow.api.request.task.CompleteTaskRequestBody;
 import cn.flow.api.request.task.FindTaskRequestBody;
 import cn.flow.api.response.process.ProcessInstanceResponseBody;
-import cn.flow.api.response.task.CompleteTaskResponseBody;
 import cn.flow.api.response.task.EasyTaskInfoResponse;
 import cn.flow.api.result.Result;
-import cn.flow.component.utils.JsonFormater;
-import com.alibaba.fastjson.JSON;
+import cn.flow.component.exception.FlowTaskException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 自动化测试用例基础方法
  */
+@Slf4j
 public class RobotTestCaseBaseModel extends WorkFlowBaseTestCase {
+
+    private final static String SYS_USER_ID = "SYS_USER_ID";
 
     /**
      * 拉起流程
@@ -30,7 +33,6 @@ public class RobotTestCaseBaseModel extends WorkFlowBaseTestCase {
     public String startComponent(String userId, String processKey, String processName, String processScopeId, Map<String, Object> variables) {
         Result<ProcessInstanceResponseBody> result = startProcessInstanceWithForm(userId, processKey, processName, processScopeId, variables);
         assertSuccess(result);
-        printJsonString(result);
         return result.getData().getProcessInstanceId();
     }
 
@@ -41,69 +43,42 @@ public class RobotTestCaseBaseModel extends WorkFlowBaseTestCase {
      * @param outCome           没什么用随便传
      * @param variables         流程参数
      */
-    public CompleteTaskResponseBody keepOnWithForm(String processInstanceId, String taskName, String outCome, Map<String, Object> variables) {
+    public void keepOnWithForm(String processInstanceId, String taskName, String outCome, Map<String, Object> variables) {
         // 获取待办
-        EasyTaskInfoResponse easyTaskInfoResponse = getEasyTaskInfo(processInstanceId, taskName, System.currentTimeMillis());
+        EasyTaskInfoResponse taskInfo = getEasyTaskInfo(processInstanceId, taskName, System.currentTimeMillis());
 
         //  如果没有找到待办，就说明流程走向出现了问题
-        if (easyTaskInfoResponse == null) {
-            logger.error("没有找到下一步的待办，看看是不是流程路线走错了");
+        if (taskInfo == null) {
+            throw new FlowTaskException("没有找到下一步的待办，看看是不是流程路线走错了");
         }
-
-        CompleteTaskRequestBody completeTaskRequestBody = new CompleteTaskRequestBody();
-        completeTaskRequestBody.setTaskId(easyTaskInfoResponse.getTaskId());
-        completeTaskRequestBody.setFormDefinitionId(easyTaskInfoResponse.getTaskFormKeyId());
-        completeTaskRequestBody.setOutcome(outCome);
-        completeTaskRequestBody.setUserId(easyTaskInfoResponse.getUserId());
+        CompleteTaskRequestBody completeTaskRequestBody = new CompleteTaskRequestBody(taskInfo.getUserId(), taskInfo.getTaskId(), taskInfo.getTaskFormDefinitionId(), outCome, variables);
         if (StringUtils.isEmpty(completeTaskRequestBody.getUserId())) {
-            completeTaskRequestBody.setUserId(getOneUserByRole(easyTaskInfoResponse.getRoleKey()));
+            completeTaskRequestBody.setUserId(SYS_USER_ID);
         }
-        completeTaskRequestBody.setVariables(variables);
-
-        CompleteTaskResponseBody completeTaskResponseBodyResult = taskApi.completeTaskWithForm(completeTaskRequestBody);
-        assertSuccess(completeTaskResponseBodyResult);
-        printJsonString(completeTaskResponseBodyResult);
-
-        return completeTaskResponseBodyResult;
+        Result result = taskApi.completeTaskWithForm(completeTaskRequestBody);
+        assertSuccess(result);
     }
 
 
     /**
-     * 通过流程实例Id 和 任务名称查询待办任务
+     * 通过任务名查询任务
      */
     private EasyTaskInfoResponse getEasyTaskInfo(String processInstanceId, String taskName, Long times) {
-
         if (System.currentTimeMillis() - times > 10000) {
-            logger.error("获取不到待办任务：" + taskName);
+            log.error("获取不到待办任务：" + taskName);
             return null;
         }
-
-        FindTaskRequestBody findTaskRequestBody = new FindTaskRequestBody();
-        findTaskRequestBody.setProcessInsId(processInstanceId);
-        findTaskRequestBody.setTaskName(taskName);
-
-        EasyTaskInfoResponse taskEasyInfo = taskApi.getTask(findTaskRequestBody);
-
-        if (taskEasyInfo == null) {
-            try {
-                logger.error("没有获取到待办任务，2秒后再次获取");
-                Thread.currentThread().sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        EasyTaskInfoResponse taskInfo;
+        try {
+            FindTaskRequestBody findTaskRequestBody = new FindTaskRequestBody(processInstanceId, taskName);
+            Result<EasyTaskInfoResponse> result = taskApi.getTaskByName(findTaskRequestBody);
+            assertSuccess(result);
+            taskInfo = result.getData();
+        } catch (Exception e) {
             return getEasyTaskInfo(processInstanceId, taskName, times);
         }
-
-        assertSuccess(taskEasyInfo);
-
-        return taskEasyInfo;
-    }
-
-    /**
-     * 通过角色ID查询其中的一个用户
-     */
-    private String getOneUserByRole(String roleKey) {
-        // 默认返回系统用户
-        return "rent-server000000000000000000000";
+        if (!Objects.isNull(taskInfo))
+            return taskInfo;
+        return getEasyTaskInfo(processInstanceId, taskName, times);
     }
 }

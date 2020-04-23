@@ -14,7 +14,7 @@ public class FormTestCase extends WorkFlowBaseTestCase {
     @Test
     public void deployTemplate() {
         Result<FormDeployment> result = deployForm(TestUserHandForm.class.getName());
-        printJsonString(result);
+        assertSuccess(result);
     }
 
     private Result<FormDeployment> deployForm(String formClassName){
