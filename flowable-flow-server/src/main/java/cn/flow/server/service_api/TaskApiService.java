@@ -42,8 +42,8 @@ public class TaskApiService {
      * 单纯的完成任务
      */
     Result complete(CompleteTaskRequestBody requestBody) {
-        workFlowTaskService.getTaskById(requestBody.getTaskId());
-        workFlowTaskService.complete(requestBody.getTaskId(), requestBody.getUserId(), requestBody.getVariables());
+        Task task = workFlowTaskService.getTaskById(requestBody.getTaskId());
+        workFlowTaskService.complete(task.getId(), requestBody.getUserId(), requestBody.getVariables());
         return new Result();
     }
 
@@ -51,8 +51,8 @@ public class TaskApiService {
      * 正常完成任务
      */
     Result completeTaskWithForm(CompleteTaskRequestBody requestBody) {
-        workFlowTaskService.getTaskById(requestBody.getTaskId());
-        workFlowTaskService.completeTaskWithForm(requestBody.getTaskId(), requestBody.getUserId(), requestBody.getFormDefinitionId(),
+        Task task = workFlowTaskService.getTaskById(requestBody.getTaskId());
+        workFlowTaskService.completeTaskWithForm(task.getId(), requestBody.getUserId(), requestBody.getFormDefinitionId(),
                 requestBody.getFormDefinitionId(), requestBody.getVariables());
         return new Result();
     }

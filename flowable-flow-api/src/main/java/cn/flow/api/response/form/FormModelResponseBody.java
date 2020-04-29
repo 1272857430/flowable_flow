@@ -1,5 +1,7 @@
 package cn.flow.api.response.form;
 
+import cn.flow.api.response.form.vo.FormOutcome;
+import cn.flow.api.response.form.vo.OptionFormField;
 import lombok.Data;
 
 import java.util.List;

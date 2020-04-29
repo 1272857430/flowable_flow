@@ -1,44 +1,46 @@
 package cn.flow.server.service_api;
 
-import cn.flow.api.api.FormApi;
 import cn.flow.api.request.form.*;
+import cn.flow.api.response.form.FormSourceResponse;
 import cn.flow.api.response.form.FormModelResponseBody;
 import cn.flow.api.result.Result;
 import cn.flow.api.result.ResultCode;
 import cn.flow.server.service_flow.WorkFlowFormService;
+import org.flowable.form.engine.impl.persistence.entity.FormResourceEntityImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.Objects;
 
+@SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
 @Service
-public class FormApiService implements FormApi {
+public class FormApiService {
 
     @Autowired
     private WorkFlowFormService workFlowFormService;
 
-    public Result<FormModelResponseBody> getStartFormModel(GetStartFormModelRequestBody requestBody) {
-        return null;
+    Result<FormModelResponseBody> getStartFormModel(ProcessStartFormDataRequest requestBody) {
+        FormModelResponseBody responseBody = workFlowFormService.getStartFormModelByInstanceId(requestBody.getProcessInstanceId());
+        return new Result<>(responseBody);
     }
 
-    public Result<FormModelResponseBody> getRenderedStartForm(GetRenderedStartFormRequestBody requestBody) {
-        return null;
+    Result<FormModelResponseBody> getRenderedTaskForm(RenderedTaskFormDataRequest requestBody) {
+        FormModelResponseBody responseBody = workFlowFormService.getTaskFormData(requestBody.getTaskId());
+        return new Result<>(responseBody);
     }
 
-    public Result<FormModelResponseBody> getRenderedTaskForm(GetRenderedTaskFormRequestBody requestBody) {
-        return null;
-    }
-
-    public Result<FormModelResponseBody> getFormModelByKey(String formKey) {
+    Result<FormModelResponseBody> getFormModelByKey(String formKey) {
         FormModelResponseBody formModelResponseBody = workFlowFormService.getFormModelByKey(formKey);
         if (Objects.isNull(formModelResponseBody))
             return new Result<>(ResultCode.NULL_DATA);
         return new Result<>(formModelResponseBody);
     }
 
-    public Result getTaskFormData(GetFormDataRequestBody requestBody) {
-        InputStream inputStream = workFlowFormService.getFormResourceByFormKey("form-test-start");
-        return null;
+    Result<FormSourceResponse> getFormSource(FormSourceRequest request) {
+        FormResourceEntityImpl formResourceEntity = (FormResourceEntityImpl) workFlowFormService.getFormResourceByFormKey(request.getFormKey());
+        FormSourceResponse formSourceResponse = new FormSourceResponse();
+        BeanUtils.copyProperties(formResourceEntity, formSourceResponse);
+        return new Result<>(formSourceResponse);
     }
 }

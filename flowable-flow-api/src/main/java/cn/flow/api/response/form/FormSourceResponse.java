@@ -3,7 +3,7 @@ package cn.flow.api.response.form;
 import lombok.Data;
 
 @Data
-public class FormDataResponseBody {
+public class FormSourceResponse {
 
     private String id;
 

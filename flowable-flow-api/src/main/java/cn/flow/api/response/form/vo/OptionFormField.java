@@ -1,11 +1,11 @@
-package cn.flow.api.response.form;
+package cn.flow.api.response.form.vo;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class OptionFormField extends FormField{
+public class OptionFormField extends FormField {
     protected String optionType;
     protected Boolean hasEmptyValue;
     protected List<Option> options;

@@ -1,4 +1,4 @@
-package cn.flow.api.response.form;
+package cn.flow.api.response.form.vo;
 
 import lombok.AllArgsConstructor;
 

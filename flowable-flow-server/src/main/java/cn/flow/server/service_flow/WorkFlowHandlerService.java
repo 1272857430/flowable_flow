@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
 @Slf4j
 @Service
 public class WorkFlowHandlerService {
