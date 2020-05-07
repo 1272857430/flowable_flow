@@ -1,6 +1,6 @@
 package cn.flow.server.service_api;
 
-import cn.flow.api.enums.NativeActivityType;
+import cn.flow.api.enums.EnumNativeActivityType;
 import cn.flow.api.request.form.*;
 import cn.flow.api.response.form.FormSourceResponse;
 import cn.flow.api.response.form.FormModelResponseBody;
@@ -21,6 +21,20 @@ public class FormApiService {
     @Autowired
     private WorkFlowFormService workFlowFormService;
 
+    Result<FormModelResponseBody> getActivityFormData(ActivityFormDataRequest request) {
+        FormModelResponseBody responseBody;
+        // 启动表单
+        if (EnumNativeActivityType.START_EVENT.equals(request.getActivityType())){
+            responseBody = workFlowFormService.getStartFormModel(request.getProcessDefinitionId(), request.getProcessInstanceId());
+        // 用户任务表单
+        } else if (EnumNativeActivityType.USER_TASK.equals(request.getActivityType())){
+            responseBody = workFlowFormService.getTaskFormData(request.getTaskId());
+        } else {
+            return new Result<FormModelResponseBody>(ResultCode.PARAM_ERROR).setMessage("this activityType not support query taskFormDate");
+        }
+        return new Result<>(responseBody);
+    }
+
     Result<FormModelResponseBody> getStartFormModel(ProcessStartFormDataRequest requestBody) {
         FormModelResponseBody responseBody = workFlowFormService.getStartFormModel(requestBody.getProcessInstanceId());
         return new Result<>(responseBody);
@@ -31,17 +45,7 @@ public class FormApiService {
         return new Result<>(responseBody);
     }
 
-    Result<FormModelResponseBody> getActivityFormData(ActivityFormDataRequest request) {
-        FormModelResponseBody responseBody;
-        if (NativeActivityType.START_EVENT.equals(request.getActivityType())){
-            responseBody = workFlowFormService.getStartFormModel(request.getProcessDefinitionId(), request.getProcessInstanceId());
-        } else if (NativeActivityType.USER_TASK.equals(request.getActivityType())){
-            responseBody = workFlowFormService.getTaskFormData(request.getTaskId());
-        } else {
-            return new Result<FormModelResponseBody>(ResultCode.PARAM_ERROR).setMessage("this activityType not support query taskFormDate");
-        }
-        return new Result<>(responseBody);
-    }
+
 
     Result<FormModelResponseBody> getFormModelByKey(String formKey) {
         FormModelResponseBody formModelResponseBody = workFlowFormService.getFormModelByKey(formKey);

@@ -27,7 +27,7 @@ public class WorkFlowTaskService {
     public Task getTaskById(String taskId) {
         Task task = taskService.createTaskQuery().includeIdentityLinks().taskId(taskId).singleResult();
         if (Objects.isNull(task)) {
-            throw new FlowTaskException("任务未找到, taskId = " + taskId);
+            throw new FlowTaskException(FlowTaskException.TASK_NOT_FOUND_MESSAGE + taskId);
         }
         return task;
     }
@@ -42,7 +42,7 @@ public class WorkFlowTaskService {
                 .taskName(taskName)
                 .orderByTaskCreateTime().desc().list();
         if (CollectionUtils.isEmpty(taskList)){
-            throw new FlowTaskException("任务未找到, taskName = " + taskName);
+            throw new FlowTaskException(FlowTaskException.TASK_NOT_FOUND_MESSAGE + taskName);
         }
         return taskList.get(0);
     }
@@ -56,11 +56,11 @@ public class WorkFlowTaskService {
                 .includeProcessVariables()
                 .taskId(taskId).singleResult();
         if (Objects.isNull(task)) {
-            throw new FlowTaskException("任务未找到");
+            throw new FlowTaskException(FlowTaskException.TASK_NOT_FOUND_MESSAGE + taskId);
         }
 
         if (!StringUtils.isEmpty(task.getAssignee())) {
-            throw new FlowTaskException("该任务已指定处理人，无法进行领取操作");
+            throw new FlowTaskException("task has been claim");
         }
         // TODO 此处可以接入鉴权
         task.setCategory(TaskStatus.WAITING_CLAIM_PROCESSED.name());
@@ -77,10 +77,10 @@ public class WorkFlowTaskService {
                 .includeProcessVariables()
                 .singleResult();
         if (Objects.isNull(task)) {
-            throw new FlowTaskException("任务未找到");
+            throw new FlowTaskException(FlowTaskException.TASK_NOT_FOUND_MESSAGE + taskId);
         }
         if (StringUtils.isEmpty(task.getAssignee())) {
-            throw new FlowTaskException("任务未被领取，不可反领取");
+            throw new FlowTaskException("task has not be claim，could not be claim");
         }
         task.setCategory(TaskStatus.WAITING_CLAIM.name());
         taskService.saveTask(task);

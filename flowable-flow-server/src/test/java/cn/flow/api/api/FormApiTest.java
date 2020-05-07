@@ -1,9 +1,7 @@
 package cn.flow.api.api;
 
-import cn.flow.api.request.form.FormModelByKeyRequest;
-import cn.flow.api.request.form.FormSourceRequest;
-import cn.flow.api.request.form.RenderedTaskFormDataRequest;
-import cn.flow.api.request.form.ProcessStartFormDataRequest;
+import cn.flow.api.enums.EnumNativeActivityType;
+import cn.flow.api.request.form.*;
 import cn.flow.api.response.form.FormSourceResponse;
 import cn.flow.api.response.form.FormModelResponseBody;
 import cn.flow.api.result.Result;
@@ -11,6 +9,17 @@ import cn.flow.server.WorkFlowBaseTestCase;
 import org.junit.Test;
 
 public class FormApiTest extends WorkFlowBaseTestCase {
+
+    @Test
+    public void getActivityFormData(){
+//        ActivityFormDataRequest request = new ActivityFormDataRequest("1698713a-903f-11ea-9e8e-d65c5e66a961", EnumNativeActivityType.USER_TASK);
+        ActivityFormDataRequest request = new ActivityFormDataRequest("a06ab39e-9042-11ea-9e8e-d65c5e66a961", EnumNativeActivityType.USER_TASK);
+        request.setProcessInstanceId("4f88dd3f-900f-11ea-a809-d65c5e66a961");
+        request.setProcessDefinitionId("process-test-flow:5:8ebdfa8f-8534-11ea-a57b-d65c5e66a961");
+        Result<FormModelResponseBody> result = formApi.getActivityFormData(request);
+        assertSuccess(result);
+    }
+
 
     @Test
     public void getStartFormModel() {

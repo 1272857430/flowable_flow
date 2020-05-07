@@ -1,7 +1,6 @@
 package cn.flow.server.service_api;
 
 import cn.flow.api.api.FormApi;
-import cn.flow.api.enums.NativeActivityType;
 import cn.flow.api.request.form.*;
 import cn.flow.api.response.form.FormSourceResponse;
 import cn.flow.api.response.form.FormModelResponseBody;

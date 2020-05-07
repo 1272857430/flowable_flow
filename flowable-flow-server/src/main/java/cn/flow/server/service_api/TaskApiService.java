@@ -83,8 +83,8 @@ public class TaskApiService {
      */
     Result<EasyTaskInfoResponse> getTaskByName(FindTaskRequestBody requestBody) {
         Task task = workFlowTaskService.getTaskByName(requestBody.getProcessInsId(), requestBody.getTaskName());
-        String taskFormModelId = flowFormService.getFormModelByKey(task.getFormKey()).getId();
-        EasyTaskInfoResponse taskEasyInfo = new EasyTaskInfoResponse(task.getId(), taskFormModelId, task.getAssignee());
+        String taskFormDefinitionId = flowFormService.getFormModelByKey(task.getFormKey()).getFormDefinitionId();
+        EasyTaskInfoResponse taskEasyInfo = new EasyTaskInfoResponse(task.getId(), taskFormDefinitionId, task.getAssignee());
         if (StringUtils.isEmpty(taskEasyInfo.getUserId()) && !CollectionUtils.isEmpty(task.getIdentityLinks())) {
             taskEasyInfo.setRoleKey(task.getIdentityLinks().get(0).getGroupId());
         }

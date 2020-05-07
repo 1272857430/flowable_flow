@@ -38,7 +38,7 @@ public class WorkFlowService {
     public List<FormModelResponseBody> getProcessedFormData(String processInstanceId) {
         List<FormModelResponseBody>  taskFormDatas = new ArrayList<>();
         // 启动表单信息
-        FormModelResponseBody startFormModel = flowFormService.getStartFormModelByInstanceId(processInstanceId);
+        FormModelResponseBody startFormModel = flowFormService.getStartFormModel(processInstanceId);
         taskFormDatas.add(startFormModel);
 
         List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery()
@@ -55,7 +55,7 @@ public class WorkFlowService {
             if (!Objects.isNull(definitionTaskShowConfigEntity) && definitionTaskShowConfigEntity.getDisplay()) {
                 // 任务实例展示
                 if (instanceTaskShowConfigService.judgeTaskIsShow(ele.getId())) {
-                    FormModelResponseBody taskFormData = flowFormService.getTaskFormData(ele.getId(), ele.getName());
+                    FormModelResponseBody taskFormData = flowFormService.getTaskFormData(ele.getId());
                     if (!Objects.isNull(taskFormData)) {
                         forms.put(definitionTaskShowConfigEntity.getDisplayIndex(), taskFormData);
                     }

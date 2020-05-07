@@ -39,7 +39,7 @@ public abstract class WorkFlowBaseTestCase extends BaseTestCase {
         FormModelByKeyRequest request = new FormModelByKeyRequest(formKey);
         Result<FormModelResponseBody> result = formApi.getFormModelByKey(request);
         assertSuccess(result);
-        return result.getData().getId();
+        return result.getData().getFormDefinitionId();
     }
 
     /**

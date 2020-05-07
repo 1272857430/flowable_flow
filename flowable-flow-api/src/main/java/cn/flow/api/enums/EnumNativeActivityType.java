@@ -1,6 +1,6 @@
 package cn.flow.api.enums;
 
-public enum NativeActivityType {
+public enum EnumNativeActivityType {
     START_EVENT,
     USER_TASK,
     END_EVENT,

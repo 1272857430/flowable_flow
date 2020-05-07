@@ -1,6 +1,7 @@
 package cn.flow.component.form.config;
 
 import cn.flow.component.exception.FlowDeployException;
+import cn.flow.component.utils.IOUtil;
 import com.google.gson.Gson;
 import org.flowable.engine.form.StartFormData;
 import org.flowable.engine.form.TaskFormData;
@@ -9,14 +10,14 @@ import org.flowable.form.api.FormDefinition;
 import org.flowable.form.api.FormRepositoryService;
 import org.flowable.form.model.SimpleFormModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+@SuppressWarnings("Duplicates")
 public class CustomFormEngine implements FormEngine{
     public static final String FORM_ENGINE_NAME = "cjd-forms-engine";
 
@@ -40,7 +41,7 @@ public class CustomFormEngine implements FormEngine{
 
     @Override
     public Object renderTaskForm(TaskFormData taskForm) {
-        if (taskForm.getFormKey() == null) {
+        if (StringUtils.isEmpty(taskForm.getFormKey())) {
             return null;
         }
         Gson gson = new Gson();
@@ -57,22 +58,11 @@ public class CustomFormEngine implements FormEngine{
     }
 
     private byte[] getFormResource(String formKey) {
-        FormDefinition formDefinition = formRepositoryService.createFormDefinitionQuery()
-                .formDefinitionKey(formKey).latestVersion().singleResult();
+        FormDefinition formDefinition = formRepositoryService.createFormDefinitionQuery().formDefinitionKey(formKey).latestVersion().singleResult();
         InputStream inputStream = formRepositoryService.getResourceAsStream(formDefinition.getDeploymentId(), formDefinition.getResourceName());
         if (Objects.isNull(inputStream)) {
-            throw new FlowDeployException("Form with formKey '" + formKey + "' does not exist");
+            throw new FlowDeployException(FlowDeployException.FORM_NOT_FOUND_EXCEPTION + formKey);
         }
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); InputStream is = inputStream) {
-            byte[] buffer = new byte[1024];
-            int n;
-            while (-1 != (n = is.read(buffer))) {
-                outputStream.write(buffer, 0, n);
-            }
-            return outputStream.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
+        return IOUtil.getInputStreamBytes(inputStream);
     }
 }

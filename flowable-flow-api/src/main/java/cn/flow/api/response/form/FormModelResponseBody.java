@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class FormModelResponseBody {
 
-    private String id;
+    private String formDefinitionId;
 
     private String name;
 
