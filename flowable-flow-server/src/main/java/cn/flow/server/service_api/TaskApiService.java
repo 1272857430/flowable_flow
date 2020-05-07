@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+@SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
 @Service
 public class TaskApiService {
 
@@ -41,9 +42,8 @@ public class TaskApiService {
     /**
      * 单纯的完成任务
      */
-    Result complete(CompleteTaskRequestBody requestBody) {
-        Task task = workFlowTaskService.getTaskById(requestBody.getTaskId());
-        workFlowTaskService.complete(task.getId(), requestBody.getUserId(), requestBody.getVariables());
+    Result completeTask(CompleteTaskRequestBody requestBody) {
+        workFlowTaskService.completeTask(requestBody.getTaskId(), requestBody.getUserId(), requestBody.getVariables());
         return new Result();
     }
 
@@ -51,8 +51,7 @@ public class TaskApiService {
      * 正常完成任务
      */
     Result completeTaskWithForm(CompleteTaskRequestBody requestBody) {
-        Task task = workFlowTaskService.getTaskById(requestBody.getTaskId());
-        workFlowTaskService.completeTaskWithForm(task.getId(), requestBody.getUserId(), requestBody.getFormDefinitionId(),
+        workFlowTaskService.completeTaskWithForm(requestBody.getTaskId(), requestBody.getUserId(), requestBody.getFormDefinitionId(),
                 requestBody.getFormDefinitionId(), requestBody.getVariables());
         return new Result();
     }

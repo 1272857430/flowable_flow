@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/workflow/form")
 public interface FormApi {
 
+    @ApiOperation(value = "/getActivityFormData",notes = "获取流程某个节点表单")
+    @RequestMapping(value = "/getActivityFormData",method = RequestMethod.POST)
+    Result<FormModelResponseBody> getActivityFormData(@RequestBody ActivityFormDataRequest request);
+
     @ApiOperation(value = "/getStartFormModel",notes = "获取发起表单")
     @RequestMapping(value = "/getStartFormModel",method = RequestMethod.POST)
     Result<FormModelResponseBody> getStartFormModel(@RequestBody ProcessStartFormDataRequest requestBody);

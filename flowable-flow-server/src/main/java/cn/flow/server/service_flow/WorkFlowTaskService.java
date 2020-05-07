@@ -33,7 +33,7 @@ public class WorkFlowTaskService {
     }
 
     /**
-     * getTaskByName
+     * 通过任务名查询任务
      */
     public Task getTaskByName(String processInstanceId, String taskName){
         List<Task> taskList = taskService.createTaskQuery()
@@ -62,6 +62,7 @@ public class WorkFlowTaskService {
         if (!StringUtils.isEmpty(task.getAssignee())) {
             throw new FlowTaskException("该任务已指定处理人，无法进行领取操作");
         }
+        // TODO 此处可以接入鉴权
         task.setCategory(TaskStatus.WAITING_CLAIM_PROCESSED.name());
         taskService.saveTask(task);
         taskService.claim(taskId, userId);
@@ -78,7 +79,6 @@ public class WorkFlowTaskService {
         if (Objects.isNull(task)) {
             throw new FlowTaskException("任务未找到");
         }
-
         if (StringUtils.isEmpty(task.getAssignee())) {
             throw new FlowTaskException("任务未被领取，不可反领取");
         }
@@ -91,8 +91,10 @@ public class WorkFlowTaskService {
      * 纯洁的完成任务
      */
     @Transactional
-    public void complete(String taskId, String userId, Map<String, Object> variables) {
-        taskService.setAssignee(taskId, userId);
+    public void completeTask(String taskId, String userId, Map<String, Object> variables) {
+        Task task = getTaskById(taskId);
+        // TODO 此处可以接入鉴权
+        taskService.setAssignee(task.getId(), userId);
         if (CollectionUtils.isEmpty(variables)){
             taskService.complete(taskId);
         } else {
@@ -105,7 +107,9 @@ public class WorkFlowTaskService {
      */
     @Transactional
     public void completeTaskWithForm(String taskId, String userId, String formDefinitionId, String outcome, Map<String, Object> variables){
-        taskService.setAssignee(taskId, userId);
+        Task task = getTaskById(taskId);
+        // TODO 此处可以接入鉴权
+        taskService.setAssignee(task.getId(), userId);
         taskService.completeTaskWithForm(taskId, formDefinitionId, outcome, variables);
     }
 

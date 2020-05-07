@@ -51,14 +51,12 @@ public class TaskApiController implements TaskApi {
      * 单纯的完成任务
      */
     @Override
-    @RequestMapping(value = "/complete",method = RequestMethod.POST)
-    public Result complete(CompleteTaskRequestBody requestBody) {
-        if (StringUtils.isEmpty(requestBody.getTaskId())
-                || StringUtils.isEmpty(requestBody.getUserId())
-                || StringUtils.isEmpty(requestBody.getFormDefinitionId())){
+    @RequestMapping(value = "/completeTask",method = RequestMethod.POST)
+    public Result completeTask(@RequestBody CompleteTaskRequestBody requestBody) {
+        if (StringUtils.isEmpty(requestBody.getTaskId()) || StringUtils.isEmpty(requestBody.getUserId())){
             return new Result<>(ResultCode.PARAM_ERROR);
         }
-        return taskApiService.complete(requestBody);
+        return taskApiService.completeTask(requestBody);
     }
 
     /**

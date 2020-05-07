@@ -37,17 +37,17 @@ public class Result<T> {
         this.data = data;
     }
 
-    public Result setCode(int code) {
+    public Result<T> setCode(int code) {
         this.code = code;
         return this;
     }
 
-    public Result setMessage(String message) {
+    public Result<T> setMessage(String message) {
         this.message = message;
         return this;
     }
 
-    public Result setData(T data) {
+    public Result<T> setData(T data) {
         this.data = data;
         return this;
     }

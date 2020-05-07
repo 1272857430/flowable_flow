@@ -18,7 +18,7 @@ logging:
 #spring
 spring:
   application:
-    name: sayyoo-workflow
+    name: flowable-flow
   redis:
     database: 0
     host: 62.234.137.124

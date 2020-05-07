@@ -1,5 +1,6 @@
 package cn.flow.server.service_api;
 
+import cn.flow.api.enums.NativeActivityType;
 import cn.flow.api.request.form.*;
 import cn.flow.api.response.form.FormSourceResponse;
 import cn.flow.api.response.form.FormModelResponseBody;
@@ -21,12 +22,24 @@ public class FormApiService {
     private WorkFlowFormService workFlowFormService;
 
     Result<FormModelResponseBody> getStartFormModel(ProcessStartFormDataRequest requestBody) {
-        FormModelResponseBody responseBody = workFlowFormService.getStartFormModelByInstanceId(requestBody.getProcessInstanceId());
+        FormModelResponseBody responseBody = workFlowFormService.getStartFormModel(requestBody.getProcessInstanceId());
         return new Result<>(responseBody);
     }
 
     Result<FormModelResponseBody> getRenderedTaskForm(RenderedTaskFormDataRequest requestBody) {
         FormModelResponseBody responseBody = workFlowFormService.getTaskFormData(requestBody.getTaskId());
+        return new Result<>(responseBody);
+    }
+
+    Result<FormModelResponseBody> getActivityFormData(ActivityFormDataRequest request) {
+        FormModelResponseBody responseBody;
+        if (NativeActivityType.START_EVENT.equals(request.getActivityType())){
+            responseBody = workFlowFormService.getStartFormModel(request.getProcessDefinitionId(), request.getProcessInstanceId());
+        } else if (NativeActivityType.USER_TASK.equals(request.getActivityType())){
+            responseBody = workFlowFormService.getTaskFormData(request.getTaskId());
+        } else {
+            return new Result<FormModelResponseBody>(ResultCode.PARAM_ERROR).setMessage("this activityType not support query taskFormDate");
+        }
         return new Result<>(responseBody);
     }
 
@@ -43,4 +56,6 @@ public class FormApiService {
         BeanUtils.copyProperties(formResourceEntity, formSourceResponse);
         return new Result<>(formSourceResponse);
     }
+
+
 }

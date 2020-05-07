@@ -26,8 +26,8 @@ public interface TaskApi {
     Result unClaim(@RequestBody ClaimTaskRequestBody requestBody);
 
     @ApiOperation(value = "单纯的完成任务")
-    @RequestMapping(value = "/complete",method = RequestMethod.POST)
-    Result complete(CompleteTaskRequestBody requestBody);
+    @RequestMapping(value = "/completeTask",method = RequestMethod.POST)
+    Result completeTask(CompleteTaskRequestBody requestBody);
 
     @ApiOperation(value = "正常完成任务")
     @RequestMapping(value = "/completeTaskWithForm",method = RequestMethod.POST)

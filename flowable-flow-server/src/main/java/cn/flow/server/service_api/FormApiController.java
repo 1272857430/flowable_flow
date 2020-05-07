@@ -1,10 +1,8 @@
 package cn.flow.server.service_api;
 
 import cn.flow.api.api.FormApi;
-import cn.flow.api.request.form.FormModelByKeyRequest;
-import cn.flow.api.request.form.FormSourceRequest;
-import cn.flow.api.request.form.RenderedTaskFormDataRequest;
-import cn.flow.api.request.form.ProcessStartFormDataRequest;
+import cn.flow.api.enums.NativeActivityType;
+import cn.flow.api.request.form.*;
 import cn.flow.api.response.form.FormSourceResponse;
 import cn.flow.api.response.form.FormModelResponseBody;
 import cn.flow.api.result.Result;
@@ -13,12 +11,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/workflow/form")
 public class FormApiController implements FormApi {
 
     @Autowired
     private FormApiService formApiService;
+
+    /**
+     * 获取流程某个节点表单
+     */
+    @Override
+    @RequestMapping(value = "/getActivityFormData",method = RequestMethod.POST)
+    public Result<FormModelResponseBody> getActivityFormData(@RequestBody ActivityFormDataRequest request) {
+        if (Objects.isNull(request.getActivityType())) {
+            return new Result<>(ResultCode.PARAM_ERROR);
+        }
+        return formApiService.getActivityFormData(request);
+    }
 
     /**
      * 获取发起表单
